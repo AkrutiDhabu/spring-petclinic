@@ -1,3 +1,4 @@
+
 # Starter pipeline
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
@@ -19,10 +20,13 @@ stages:
         - task: CmdLine@2
           inputs:
             script: |
-              sudo apt-get update && sudo apt-get install openjdk-17-jdk
-              sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
-              sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
-              java -version
+              export JAVA_HOME=/opt/sap/sapjvm_17
+              System V init distributions: service scc_daemon stop
+              systemd distributions: systemctl stop scc_daemon
+              System V init distributions: /opt/sap/scc/daemon.sh reinstall
+              systemd distributions: /opt/sap/scc/daemon.sh reinstallSystemd
+              System V init distributions: service scc_daemon start
+              systemd distributions: systemctl start scc_daemon
         - task: Maven@4
           displayName: 'Maven Package'
           inputs:
